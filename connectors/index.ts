@@ -14,18 +14,19 @@ import { SafeAppConnector } from "@gnosis.pm/safe-apps-web3-react/dist/connector
 setWeb3LibraryCallback(provider => new Web3(provider));
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 137, 42161, 43114, 10]
+  supportedChainIds: [137, 8453, 1, 42161, 43114, 10]
 });
 
 export const walletconnect = new WalletConnectConnector({
   rpc: {
+    137: process.env.POLYGON_RPC_URL || "https://polygon-rpc.com",
+    8453: process.env.BASE_RPC_URL || "https://mainnet.base.org",
     1: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
-    137: "https://rpc-mainnet.maticvigil.com",
     42161: "https://arb1.arbitrum.io/rpc",
     43114: "https://api.avax.network/ext/bc/C/rpc",
-    10: "https://optimistic.etherscan.io",
+    10: "https://mainnet.optimism.io",
   },
-  supportedChainIds: [1, 137, 42161, 43114, 10]
+  supportedChainIds: [137, 8453, 1, 42161, 43114, 10]
 });
 
 // mainnet only
@@ -44,7 +45,7 @@ let gnosisSafe = null;
 
 if (process.client) {
   gnosisSafe = new SafeAppConnector({
-    supportedChainIds: [1, 137, 42161, 43114, 10]
+    supportedChainIds: [137, 8453, 1, 42161, 43114, 10]
   });
 }
 

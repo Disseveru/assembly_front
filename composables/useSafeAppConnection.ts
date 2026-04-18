@@ -17,7 +17,11 @@ export function useSafeAppConnection(connector?: SafeAppConnector) {
           tried.value = true;
         });
 
-        activeNetworkId.value = (await connector.getChainId() === 1) ? Network.Mainnet : Network.Polygon;
+        const chainId = await connector.getChainId();
+
+        activeNetworkId.value = chainId === 1
+          ? Network.Mainnet
+          : Network.Polygon;
       } else {
         tried.value = true;
       }

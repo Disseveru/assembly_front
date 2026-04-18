@@ -12,16 +12,17 @@ import { useWeb3 } from "@instadapp/vue-web3";
 import { useCookies } from "./useCookies";
 
 export enum Network {
-  Mainnet = "mainnet",
   Polygon = "polygon",
+  Base = "base",
+  Mainnet = "mainnet",
   Arbitrum = "arbitrum",
   Avalanche = "avalanche",
   Optimism = "optimism",
 }
 
 export const networks = [
-  { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
+  { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG },
   { id: "avalanche", chainId: 43114, name: "Avalanche", icon: AvalancheSVG },
   { id: "optimism", chainId: 10, name: "Optimism", icon: OptimismSVG },
@@ -34,9 +35,11 @@ export const activeNetwork = computed(
 
 export function useNetwork() {
   const { showWarning } = useNotification();
-  const { account, chainId } = useWeb3();
+  const { chainId } = useWeb3();
   const { showNetworksMismatchDialog } = useModal();
   const { get: getCookie, set: setCookie } = useCookies();
+  const polygonRpcUrl = process.env.POLYGON_RPC_URL || "https://polygon-rpc.com";
+  const baseRpcUrl = process.env.BASE_RPC_URL || "https://mainnet.base.org";
 
   const networkMismatch = computed(
     () => chainId.value != activeNetwork.value?.chainId
@@ -86,12 +89,49 @@ export function useNetwork() {
                 symbol: "MATIC",
                 decimals: 18
               },
-              rpcUrls: ["https://rpc-mainnet.matic.network"],
+              rpcUrls: [polygonRpcUrl],
               blockExplorerUrls: ["https://polygonscan.com/"]
             };
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [chainData, account.value]
+              params: [chainData]
+            });
+          } catch (addError) {
+            return Promise.reject(addError);
+          }
+        } else {
+          return Promise.reject(switchError);
+        }
+      }
+    }
+  }
+
+  async function switchToBase() {
+    if (window.ethereum) {
+      const chainId = "0x2105";
+
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId }]
+        });
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            const chainData = {
+              chainId,
+              chainName: "Base",
+              nativeCurrency: {
+                name: "Ethereum",
+                symbol: "ETH",
+                decimals: 18
+              },
+              rpcUrls: [baseRpcUrl],
+              blockExplorerUrls: ["https://basescan.org/"]
+            };
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [chainData]
             });
           } catch (addError) {
             return Promise.reject(addError);
@@ -129,7 +169,7 @@ export function useNetwork() {
             };
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [chainData, account.value]
+              params: [chainData]
             });
           } catch (addError) {
             return Promise.reject(addError);
@@ -167,7 +207,7 @@ export function useNetwork() {
             }
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [chainData, account.value],
+              params: [chainData],
             })
           } catch (addError) {
             return Promise.reject(addError)
@@ -205,7 +245,7 @@ export function useNetwork() {
             }
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [chainData, account.value],
+              params: [chainData],
             })
           } catch (addError) {
             return Promise.reject(addError)
@@ -219,7 +259,11 @@ export function useNetwork() {
 
   async function switchNetwork() {
     try {
-      if (activeNetworkId.value === "mainnet") {
+      if (activeNetworkId.value === "polygon") {
+        await switchToPolygon();
+      } else if (activeNetworkId.value === "base") {
+        await switchToBase();
+      } else if (activeNetworkId.value === "mainnet") {
         await switchToMainnet();
       } else if (activeNetworkId.value === "arbitrum") {
         await switchToArbitrum();
@@ -248,10 +292,10 @@ export function useNetwork() {
 
     const savedNetwork = getCookie("network");
 
-    if ((Object.values(Network) as any[]).includes(savedNetwork)) {
+    if (networks.some(network => network.id === savedNetwork)) {
       activeNetworkId.value = savedNetwork as Network;
     } else {
-      activeNetworkId.value = Network.Mainnet;
+      activeNetworkId.value = Network.Polygon;
     }
     // refreshWeb3()
   });

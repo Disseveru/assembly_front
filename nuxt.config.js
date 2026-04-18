@@ -70,11 +70,15 @@ export default {
   env: {
     PORTIS_ID: process.env.PORTIS_ID,
     INFURA_ID: process.env.INFURA_ID,
+    POLYGON_RPC_URL: process.env.POLYGON_RPC_URL,
+    BASE_RPC_URL: process.env.BASE_RPC_URL,
   },
 
   publicRuntimeConfig: {
     INFURA_ID: process.env.INFURA_ID,
     PORTIS_ID: process.env.PORTIS_ID,
+    POLYGON_RPC_URL: process.env.POLYGON_RPC_URL,
+    BASE_RPC_URL: process.env.BASE_RPC_URL,
     TENDERLY_FORK_PATH: process.env.TENDERLY_FORK_PATH,
     TENDERLY_KEY: process.env.TENDERLY_KEY,
   },
