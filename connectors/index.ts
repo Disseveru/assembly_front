@@ -24,7 +24,7 @@ export const walletconnect = new WalletConnectConnector({
     1: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
     42161: "https://arb1.arbitrum.io/rpc",
     43114: "https://api.avax.network/ext/bc/C/rpc",
-    10: "https://optimistic.etherscan.io",
+    10: "https://mainnet.optimism.io",
   },
   supportedChainIds: [137, 8453, 1, 42161, 43114, 10]
 });
