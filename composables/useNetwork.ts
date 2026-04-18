@@ -2,7 +2,6 @@ import { computed, watchEffect, ref, watch } from "@nuxtjs/composition-api";
 
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
-import BaseSVG from "~/assets/icons/base.svg?inline";
 import ArbitrumSVG from "~/assets/icons/arbitrum.svg?inline";
 import AvalancheSVG from "~/assets/icons/avalanche.svg?inline";
 import OptimismSVG from "~/assets/icons/optimism.svg?inline";
@@ -23,7 +22,6 @@ export enum Network {
 
 export const networks = [
   { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
-  { id: "base", chainId: 8453, name: "Base", icon: BaseSVG },
   { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG },
   { id: "avalanche", chainId: 43114, name: "Avalanche", icon: AvalancheSVG },
@@ -37,9 +35,11 @@ export const activeNetwork = computed(
 
 export function useNetwork() {
   const { showWarning } = useNotification();
-  const { account, chainId } = useWeb3();
+  const { chainId } = useWeb3();
   const { showNetworksMismatchDialog } = useModal();
   const { get: getCookie, set: setCookie } = useCookies();
+  const polygonRpcUrl = process.env.POLYGON_RPC_URL || "https://polygon-rpc.com";
+  const baseRpcUrl = process.env.BASE_RPC_URL || "https://mainnet.base.org";
 
   const networkMismatch = computed(
     () => chainId.value != activeNetwork.value?.chainId
@@ -89,12 +89,12 @@ export function useNetwork() {
                 symbol: "MATIC",
                 decimals: 18
               },
-              rpcUrls: ["https://rpc-mainnet.matic.network"],
+              rpcUrls: [polygonRpcUrl],
               blockExplorerUrls: ["https://polygonscan.com/"]
             };
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [chainData, account.value]
+              params: [chainData]
             });
           } catch (addError) {
             return Promise.reject(addError);
@@ -126,7 +126,7 @@ export function useNetwork() {
                 symbol: "ETH",
                 decimals: 18
               },
-              rpcUrls: ["https://mainnet.base.org"],
+              rpcUrls: [baseRpcUrl],
               blockExplorerUrls: ["https://basescan.org/"]
             };
             await window.ethereum.request({
@@ -169,7 +169,7 @@ export function useNetwork() {
             };
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [chainData, account.value]
+              params: [chainData]
             });
           } catch (addError) {
             return Promise.reject(addError);
@@ -207,7 +207,7 @@ export function useNetwork() {
             }
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [chainData, account.value],
+              params: [chainData],
             })
           } catch (addError) {
             return Promise.reject(addError)
@@ -245,7 +245,7 @@ export function useNetwork() {
             }
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [chainData, account.value],
+              params: [chainData],
             })
           } catch (addError) {
             return Promise.reject(addError)
@@ -292,7 +292,7 @@ export function useNetwork() {
 
     const savedNetwork = getCookie("network");
 
-    if ((Object.values(Network) as any[]).includes(savedNetwork)) {
+    if (networks.some(network => network.id === savedNetwork)) {
       activeNetworkId.value = savedNetwork as Network;
     } else {
       activeNetworkId.value = Network.Polygon;
