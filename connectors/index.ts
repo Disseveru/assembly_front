@@ -19,7 +19,7 @@ export const injected = new InjectedConnector({
 
 export const walletconnect = new WalletConnectConnector({
   rpc: {
-    137: process.env.POLYGON_RPC_URL || "https://polygon-rpc.com",
+    137: process.env.POLYGON_RPC_URL || "https://rpc-mainnet.matic.network",
     8453: process.env.BASE_RPC_URL || "https://mainnet.base.org",
     1: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
     42161: "https://arb1.arbitrum.io/rpc",

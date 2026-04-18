@@ -272,7 +272,7 @@ export function useNetwork() {
       } else if (activeNetworkId.value === "optimism") {
         await switchToOptimism();
       } else {
-        await switchToMainnet();
+        await switchToPolygon();
       }
       return Promise.resolve();
     } catch (error) {
