@@ -21,9 +21,7 @@ export function useSafeAppConnection(connector?: SafeAppConnector) {
 
         activeNetworkId.value = chainId === 1
           ? Network.Mainnet
-          : chainId === 8453
-            ? Network.Base
-            : Network.Polygon;
+          : Network.Polygon;
       } else {
         tried.value = true;
       }
