@@ -2,6 +2,7 @@ import { computed, watchEffect, ref, watch } from "@nuxtjs/composition-api";
 
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
+import BaseSVG from "~/assets/icons/base.svg?inline";
 import ArbitrumSVG from "~/assets/icons/arbitrum.svg?inline";
 import AvalancheSVG from "~/assets/icons/avalanche.svg?inline";
 import OptimismSVG from "~/assets/icons/optimism.svg?inline";
@@ -12,16 +13,18 @@ import { useWeb3 } from "@instadapp/vue-web3";
 import { useCookies } from "./useCookies";
 
 export enum Network {
-  Mainnet = "mainnet",
   Polygon = "polygon",
+  Base = "base",
+  Mainnet = "mainnet",
   Arbitrum = "arbitrum",
   Avalanche = "avalanche",
   Optimism = "optimism",
 }
 
 export const networks = [
-  { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
+  { id: "base", chainId: 8453, name: "Base", icon: BaseSVG },
+  { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG },
   { id: "avalanche", chainId: 43114, name: "Avalanche", icon: AvalancheSVG },
   { id: "optimism", chainId: 10, name: "Optimism", icon: OptimismSVG },
@@ -88,6 +91,43 @@ export function useNetwork() {
               },
               rpcUrls: ["https://rpc-mainnet.matic.network"],
               blockExplorerUrls: ["https://polygonscan.com/"]
+            };
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [chainData, account.value]
+            });
+          } catch (addError) {
+            return Promise.reject(addError);
+          }
+        } else {
+          return Promise.reject(switchError);
+        }
+      }
+    }
+  }
+
+  async function switchToBase() {
+    if (window.ethereum) {
+      const chainId = "0x2105";
+
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId }]
+        });
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            const chainData = {
+              chainId,
+              chainName: "Base",
+              nativeCurrency: {
+                name: "Ethereum",
+                symbol: "ETH",
+                decimals: 18
+              },
+              rpcUrls: ["https://mainnet.base.org"],
+              blockExplorerUrls: ["https://basescan.org/"]
             };
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
@@ -219,7 +259,11 @@ export function useNetwork() {
 
   async function switchNetwork() {
     try {
-      if (activeNetworkId.value === "mainnet") {
+      if (activeNetworkId.value === "polygon") {
+        await switchToPolygon();
+      } else if (activeNetworkId.value === "base") {
+        await switchToBase();
+      } else if (activeNetworkId.value === "mainnet") {
         await switchToMainnet();
       } else if (activeNetworkId.value === "arbitrum") {
         await switchToArbitrum();
@@ -228,7 +272,7 @@ export function useNetwork() {
       } else if (activeNetworkId.value === "optimism") {
         await switchToOptimism();
       } else {
-        await switchToPolygon();
+        await switchToMainnet();
       }
       return Promise.resolve();
     } catch (error) {
@@ -251,7 +295,7 @@ export function useNetwork() {
     if ((Object.values(Network) as any[]).includes(savedNetwork)) {
       activeNetworkId.value = savedNetwork as Network;
     } else {
-      activeNetworkId.value = Network.Mainnet;
+      activeNetworkId.value = Network.Polygon;
     }
     // refreshWeb3()
   });
