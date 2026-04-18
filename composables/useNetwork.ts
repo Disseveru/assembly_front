@@ -131,7 +131,7 @@ export function useNetwork() {
             };
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [chainData, account.value]
+              params: [chainData]
             });
           } catch (addError) {
             return Promise.reject(addError);
