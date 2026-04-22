@@ -138,6 +138,48 @@
       </div>
     </div>
 
+    <div class="mt-12">
+      <div class="flex items-center justify-between">
+        <h2 class="text-primary-gray text-lg font-semibold">Flash Loan Strategies</h2>
+        <span class="text-xs uppercase tracking-wide text-[#1874FF] font-semibold">
+          Aave Powered
+        </span>
+      </div>
+      <p class="mt-3 text-sm text-primary-gray max-w-3xl">
+        Use atomic Aave flash-loan flows to run arbitrage swaps and liquidations
+        in one transaction, so the position either settles profitably or the whole
+        transaction reverts.
+      </p>
+      <div class="mt-6 grid w-full grid-cols-1 gap-4 xl:grid-cols-2 px-1">
+        <div class="shadow rounded-lg py-6 px-6">
+          <h3 class="text-primary-black text-xl font-semibold">Arbitrage Swaps</h3>
+          <p class="mt-2 text-sm text-primary-gray">
+            Borrow deep liquidity from Aave, execute a multi-DEX swap route,
+            repay principal plus fee, and keep the spread.
+          </p>
+          <ul class="mt-4 text-sm text-primary-gray list-disc pl-5 space-y-2">
+            <li>Scan for price gaps after accounting for fees and gas.</li>
+            <li>Swap across at least two venues with minimum out protection.</li>
+            <li>Repay flash loan inside the same transaction.</li>
+          </ul>
+        </div>
+        <div class="shadow rounded-lg py-6 px-6">
+          <h3 class="text-primary-black text-xl font-semibold">
+            Undercollateralized Liquidations
+          </h3>
+          <p class="mt-2 text-sm text-primary-gray">
+            Trigger liquidations for positions below liquidation threshold and
+            collect liquidation bonus as the reward.
+          </p>
+          <ul class="mt-4 text-sm text-primary-gray list-disc pl-5 space-y-2">
+            <li>Monitor health factors and collateral factor breaches.</li>
+            <li>Repay part of the unhealthy debt using a flash loan.</li>
+            <li>Seize discounted collateral, swap, repay loan, retain reward.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="mt-[60px]">
       <div
         class="w-full flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xl:mt-4"
