@@ -98,6 +98,13 @@ const appsPerNetwork = {
       url: "/mainnet/universe",
       description: "Maximizing your Uniswap V3 Return"
     },
+    {
+      id: "flash-liquidator",
+      icon: AaveIcon,
+      name: "Flash Liquidator",
+      url: "/mainnet/flash-liquidator",
+      description: "Aave V3 liquidation scanner + simulation execution"
+    },
   ],
   polygon: [
     {

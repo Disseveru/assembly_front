@@ -56,6 +56,7 @@ import SidebarYearnV2Withdraw from '~/components/sidebar/context/yearn-v2/Sideba
 
 import SidebarUniverseSupply from "~/components/sidebar/context/universe/SidebarUniverseSupply.vue";
 import SidebarUniverseWithdraw from '~/components/sidebar/context/universe/SidebarUniverseWithdraw.vue'
+import SidebarFlashLiquidatorExecute from "~/components/sidebar/context/flashLiquidator/SidebarFlashLiquidatorExecute.vue";
 
 import SidebarStrategySelection from '~/components/sidebar/context/strategy/SidebarStrategySelection.vue'
 import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
@@ -113,6 +114,9 @@ const sidebars = {
   "/mainnet/yearn-v2#supply": { component: SidebarYearnV2Supply },
   "/mainnet/yearn-v2#withdraw": { component: SidebarYearnV2Withdraw },
 
+  "/mainnet/flash-liquidator": { component: null },
+  "/mainnet/flash-liquidator#liquidator-execute": { component: SidebarFlashLiquidatorExecute },
+
   "/aave-v3": { component: null },
   "/aave-v3#supply": { component: SidebarAaveV3Supply },
   "/aave-v3#borrow": { component: SidebarAaveV3Borrow },
@@ -136,9 +140,6 @@ export function init() {
 
       //@ts-ignore
       const hasPathChanged = !oldRoute || route.path !== oldRoute.path;
-      const hasIsLoggedInChanged = active !== oldActive;
-      const hasDsaChanged = dsa !== oldDsa;
-
       //@ts-ignore
       const [hash, params] = route.hash.split("?");
 
