@@ -432,7 +432,9 @@ export function useLiquidationScanner() {
       const reserveMap = await fetchReserveMeta(currentMarketAddress);
       const wethReserve =
         reserveMap[normalizeAddress("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")] ||
-        Object.values(reserveMap).find(reserve => reserve.symbol === "WETH");
+        (Object.values(reserveMap) as ReserveMeta[]).find(
+          reserve => reserve.symbol === "WETH"
+        );
       const ethPriceUsd = wethReserve?.usdPrice || "0";
       const gasUsd = await estimateGasUsd(ethPriceUsd);
 

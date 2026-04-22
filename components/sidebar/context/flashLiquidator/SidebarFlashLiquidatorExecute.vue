@@ -6,19 +6,19 @@
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
         Target User
       </h3>
-      <p class="text-sm text-primary-black break-all">{{ target?.user }}</p>
+      <p class="text-sm text-primary-black break-all">{{ target && target.user }}</p>
 
       <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div class="rounded-md bg-white p-4">
           <div class="text-xs text-primary-gray">Debt / Collateral</div>
           <div class="mt-1 text-sm font-semibold text-primary-black">
-            {{ target?.debtTokenSymbol }} / {{ target?.collateralTokenSymbol }}
+            {{ target && target.debtTokenSymbol }} / {{ target && target.collateralTokenSymbol }}
           </div>
         </div>
         <div class="rounded-md bg-white p-4">
           <div class="text-xs text-primary-gray">Health Factor</div>
           <div class="mt-1 text-sm font-semibold text-primary-black">
-            {{ target?.healthFactor || "-" }}
+            {{ (target && target.healthFactor) || "-" }}
           </div>
         </div>
       </div>
@@ -27,16 +27,16 @@
         <div class="rounded-md bg-white p-4">
           <div class="text-xs text-primary-gray">Debt To Cover</div>
           <div class="mt-1 text-sm font-semibold text-primary-black">
-            {{ formatUsd(target?.debtToCoverUsd || "0") }}
+            {{ formatUsd((target && target.debtToCoverUsd) || "0") }}
           </div>
         </div>
         <div class="rounded-md bg-white p-4">
           <div class="text-xs text-primary-gray">Expected Net Profit</div>
           <div
             class="mt-1 text-sm font-semibold"
-            :class="target?.isProfitable ? 'text-[#2f9e44]' : 'text-[#d64545]'"
+            :class="target && target.isProfitable ? 'text-[#2f9e44]' : 'text-[#d64545]'"
           >
-            {{ formatUsd(target?.expectedNetProfitUsd || "0") }}
+            {{ formatUsd((target && target.expectedNetProfitUsd) || "0") }}
           </div>
         </div>
       </div>

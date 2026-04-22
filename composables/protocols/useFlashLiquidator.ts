@@ -80,15 +80,17 @@ export function useFlashLiquidator() {
 
     internal.getInterface = originalGetInterface;
 
-    const methods = capturedAbi
-      ? [
-          ...new Set(
-            capturedAbi
-              .filter(item => item.type === "function")
-              .map(item => item.name)
-          )
-        ]
-      : [];
+    const methods = (
+      capturedAbi
+        ? [
+            ...new Set(
+              capturedAbi
+                .filter(item => item.type === "function")
+                .map(item => String(item.name))
+            )
+          ]
+        : []
+    ) as string[];
 
     connectorMethodCache.set(connector, methods);
     return methods;

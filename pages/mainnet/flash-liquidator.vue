@@ -232,10 +232,7 @@ import ToggleButton from "~/components/common/input/ToggleButton.vue";
 import { useFormatting } from "~/composables/useFormatting";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useLiquidationScanner } from "~/composables/protocols/useLiquidationScanner";
-import {
-  useFlashLiquidator,
-  clearConnectorMethodCache
-} from "~/composables/protocols/useFlashLiquidator";
+import { useFlashLiquidator } from "~/composables/protocols/useFlashLiquidator";
 
 export default defineComponent({
   components: {
@@ -263,7 +260,8 @@ export default defineComponent({
     const {
       executeTarget,
       pending: executionPending,
-      executionError
+      executionError,
+      clearConnectorMethodCache
     } = useFlashLiquidator();
     const { formatUsd } = useFormatting();
     const { plus } = useBigNumber();
@@ -336,7 +334,6 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      clearConnectorMethodCache();
       if (!scannerRunning.value) {
         startScanner();
       }
