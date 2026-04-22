@@ -20,6 +20,14 @@ type MethodInput = {
   type: string;
 };
 
+function toKey(value: unknown) {
+  return String(value || "").toLowerCase();
+}
+
+function getDsaAddress(value: unknown) {
+  return toKey((value as { address?: string } | null)?.address);
+}
+
 function parseInputsFromError(errorMessage: string): MethodInput[] {
   const match = String(errorMessage || "").match(/value=(\{.*\}), code=/);
   if (!match?.[1]) {
@@ -50,9 +58,9 @@ export function useFlashLiquidator() {
   watch(
     () => [
       activeNetworkId.value,
-      String(account.value || "").toLowerCase(),
-      String(activeAccount.value || "").toLowerCase(),
-      String((dsa.value as any)?.address || "").toLowerCase()
+      toKey(account.value),
+      toKey(activeAccount.value),
+      getDsaAddress(dsa.value)
     ],
     () => {
       clearConnectorMethodCache();
