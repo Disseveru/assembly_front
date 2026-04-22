@@ -1,6 +1,5 @@
 import {
   computed,
-  onBeforeUnmount,
   readonly,
   ref,
   useContext
@@ -509,10 +508,6 @@ export function useLiquidationScanner() {
   function getTargetByUser(user: string) {
     return targetsByUser.value[normalizeAddress(user)] || null;
   }
-
-  onBeforeUnmount(() => {
-    stopScanner();
-  });
 
   return {
     loading: readonly(loading),

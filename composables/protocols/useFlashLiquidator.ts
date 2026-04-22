@@ -1,7 +1,8 @@
-import { ref, readonly } from "@nuxtjs/composition-api";
+import { ref, readonly, watch } from "@nuxtjs/composition-api";
 import { useWeb3 } from "@instadapp/vue-web3";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useDSA } from "~/composables/useDSA";
+import { useNetwork } from "~/composables/useNetwork";
 import { useNotification } from "~/composables/useNotification";
 import { useTenderly } from "~/composables/useTenderly";
 import type { LiquidationTarget } from "~/composables/protocols/useLiquidationScanner";
@@ -40,10 +41,24 @@ function clearConnectorMethodCache() {
 export function useFlashLiquidator() {
   const { account } = useWeb3();
   const { dsa, activeAccount } = useDSA();
+  const { activeNetworkId } = useNetwork();
   const { forkId } = useTenderly();
   const { toBN, gt } = useBigNumber();
   const { showPendingTransaction, showConfirmedTransaction, showWarning } =
     useNotification();
+
+  watch(
+    () => [
+      activeNetworkId.value,
+      String(account.value || "").toLowerCase(),
+      String(activeAccount.value || "").toLowerCase(),
+      String((dsa.value as any)?.address || "").toLowerCase()
+    ],
+    () => {
+      clearConnectorMethodCache();
+    },
+    { immediate: true }
+  );
 
   function getConnectorMethods(connector: string) {
     if (connectorMethodCache.has(connector)) {
@@ -92,7 +107,10 @@ export function useFlashLiquidator() {
         : []
     ) as string[];
 
-    connectorMethodCache.set(connector, methods);
+    if (methods.length) {
+      connectorMethodCache.set(connector, methods);
+    }
+
     return methods;
   }
 

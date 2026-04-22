@@ -260,8 +260,7 @@ export default defineComponent({
     const {
       executeTarget,
       pending: executionPending,
-      executionError,
-      clearConnectorMethodCache
+      executionError
     } = useFlashLiquidator();
     const { formatUsd } = useFormatting();
     const { plus } = useBigNumber();
