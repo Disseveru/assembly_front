@@ -362,8 +362,8 @@ export function useLiquidationScanner() {
     const debtRaw = String(debtPosition?.debt?.amount?.raw || "0");
     const totalDebtBase = String(marketState?.totalDebtBase || "0");
 
-    // Aave allows full liquidation when HF <= 0.95 or small positions.
-    const canLiquidateAll = gt("0.95", healthFactor) || gt("2000", debtUsd);
+    // Aave allows full liquidation when HF <= 0.95 or for small total-debt positions.
+    const canLiquidateAll = gt("0.95", healthFactor) || gt("2000", totalDebtBase);
     const coverRatio = canLiquidateAll ? "1" : "0.5";
     const debtToCoverUsd = toBN(debtUsd).times(coverRatio).toFixed();
     const debtToCoverRaw = toBN(debtRaw)
