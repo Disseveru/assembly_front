@@ -81,6 +81,9 @@ export default {
     BASE_RPC_URL: process.env.BASE_RPC_URL,
     TENDERLY_FORK_PATH: process.env.TENDERLY_FORK_PATH,
     TENDERLY_KEY: process.env.TENDERLY_KEY,
+    AAVE_V3_SUBGRAPH_URL: process.env.AAVE_V3_SUBGRAPH_URL,
+    AAVE_V3_LIQUIDATION_WATCHLIST: process.env.AAVE_V3_LIQUIDATION_WATCHLIST,
+    AAVE_V3_MAX_SCANNED_USERS: process.env.AAVE_V3_MAX_SCANNED_USERS,
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
